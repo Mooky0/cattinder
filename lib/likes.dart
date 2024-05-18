@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 
-class LikesPage extends StatefulWidget {
-  List<String?> likedCats = [];
+class ListPage extends StatefulWidget {
+  List<String?> cats_list = [];
+  List<String?> other_list = [];
+  final bool likesPage;
 
-  LikesPage({Key? key, required this.likedCats}) : super(key: key);
+  ListPage({Key? key,
+    required this.cats_list,
+    required this.other_list,
+    required this.likesPage}
+      ) : super(key: key);
 
   @override
-  _LikesPageState createState() => _LikesPageState();
+  _ListPageState createState() => _ListPageState();
 }
 
-class _LikesPageState extends State<LikesPage> {
+class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,11 +55,11 @@ class _LikesPageState extends State<LikesPage> {
                           fit: BoxFit.cover,
                         ),
                       ),
-                    const Expanded(
+                     Expanded(
                       flex: 1,
                       child: Text(
-                        'Liked Cats',
-                        style: TextStyle(
+                        widget.likesPage ? 'Liked Cats' : 'Disliked Cats',
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 255, 129, 166),
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
@@ -67,7 +73,7 @@ class _LikesPageState extends State<LikesPage> {
                       child: SizedBox(
                           height: MediaQuery.of(context).size.width * 0.82,
                           width: MediaQuery.of(context).size.width,
-                          child: ImageList(imageUrls: widget.likedCats)),
+                          child: ImageList(imageUrls: widget.cats_list)),
                     ),
                   ],
                 ),
@@ -94,7 +100,20 @@ class _LikesPageState extends State<LikesPage> {
                 Expanded(
                   flex: 1,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (!widget.likesPage) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ListPage(
+                              cats_list: widget.other_list,
+                              other_list: widget.cats_list,
+                              likesPage: true,
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     icon: const Icon(Icons.favorite, color: Colors.white, size: 45,),
                   ),
                 ),
@@ -102,7 +121,7 @@ class _LikesPageState extends State<LikesPage> {
                   flex: 1,
                   child: IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                     icon: const Icon(Icons.home, color: Colors.white, size: 45,),
                   ),
@@ -110,7 +129,20 @@ class _LikesPageState extends State<LikesPage> {
                 Expanded(
                   flex: 1,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (widget.likesPage) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ListPage(
+                              cats_list: widget.other_list,
+                              other_list: widget.cats_list,
+                              likesPage: false,
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     icon: const Icon(Icons.close, color: Colors.white, size: 45,),
                   ),
                 ),

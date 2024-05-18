@@ -13,6 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<_CatImageWidgetState> _catImageWidgetKey =
   GlobalKey<_CatImageWidgetState>();
   List<String?> likedCats = [];
+  List<String?> dislikedCats = [];
   var dio = Dio();
 
   void _incrementCounter() {
@@ -176,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LikesPage(likedCats: likedCats))
+                        MaterialPageRoute(builder: (context) => ListPage(cats_list: likedCats, other_list: dislikedCats, likesPage: true))
                     );
                   },
                   icon: const Icon(Icons.favorite, color: Colors.white, size: 45,),
@@ -192,7 +193,12 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 flex: 1,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ListPage(cats_list: likedCats, other_list: dislikedCats, likesPage: true))
+                    );
+                  },
                   icon: const Icon(Icons.close, color: Colors.white, size: 45,),
                 ),
               ),
@@ -216,6 +222,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void dislikeButton() {
     print("Clicked dislike button");
+    if (_catImageWidgetKey.currentState?.imageUrl != null) {
+      final imageUrl = _catImageWidgetKey.currentState!.imageUrl;
+      if (!dislikedCats.contains(imageUrl)) {
+        dislikedCats.add(imageUrl);
+      }
+    }
     _catImageWidgetKey.currentState?.fetchAndSetCatImage();
   }
 }
