@@ -6,12 +6,12 @@ import 'package:html/parser.dart' as htmlParser;
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-class MyStatefulWidget extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<_CatImageWidgetState> _catImageWidgetKey =
   GlobalKey<_CatImageWidgetState>();
   List likedCats = [];
