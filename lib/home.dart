@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart' as htmlParser;
 import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
+
+import 'package:cattinder/likes.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<_CatImageWidgetState> _catImageWidgetKey =
   GlobalKey<_CatImageWidgetState>();
-  List likedCats = [];
+  List<String?> likedCats = [];
   var dio = Dio();
 
   void _incrementCounter() {
@@ -145,6 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Manrope ExtraLight',
                           ),
                           textAlign: TextAlign.center,
                         ))
@@ -159,47 +159,59 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           )),
-      bottomNavigationBar: Container(
-        height: 50,
-        color: const Color.fromARGB(255, 255, 129, 166),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.close, color: Colors.white),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.search, color: Colors.white),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.notifications, color: Colors.white),
-            ),
-          ],
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(35),
+          topRight: Radius.circular(35),
+        ),
+        child: Container(
+          height: 85,
+          color: const Color.fromARGB(255, 255, 129, 166),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LikesPage(likedCats: likedCats))
+                    );
+                  },
+                  icon: const Icon(Icons.favorite, color: Colors.white, size: 45,),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.home, color: Colors.white, size: 45,),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.close, color: Colors.white, size: 45,),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-
-  Future<String?> getRandomCat() async {
-    final String? id = await fetchCatDetails();
-    if (id != null) {
-      print('Fetched ID: $id');
-      return id;
-    } else {
-      print('Failed to fetch ID');
-    }
-    return null;
-  }
-
   void likeButton() {
     print("Clicked like button");
-    likedCats.add(_catImageWidgetKey.currentState?.imageUrl);
+    if (_catImageWidgetKey.currentState?.imageUrl != null) {
+      final imageUrl = _catImageWidgetKey.currentState!.imageUrl;
+      if (!likedCats.contains(imageUrl)) {
+        likedCats.add(imageUrl);
+      }
+    }
     _catImageWidgetKey.currentState?.fetchAndSetCatImage();
-
   }
 
   void dislikeButton() {
@@ -274,7 +286,7 @@ class _CatImageWidgetState extends State<CatImageWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: isLoading
-          ? CircularProgressIndicator()
+          ? const CircularProgressIndicator()
           : errorMessage != null
           ? Text(errorMessage!)
           : imageUrl != null
