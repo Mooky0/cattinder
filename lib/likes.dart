@@ -1,13 +1,11 @@
+import 'package:cattinder/LikesAndDislikes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListPage extends StatefulWidget {
-  List<String?> cats_list = [];
-  List<String?> other_list = [];
   final bool likesPage;
 
   ListPage({Key? key,
-    required this.cats_list,
-    required this.other_list,
     required this.likesPage}
       ) : super(key: key);
 
@@ -73,8 +71,9 @@ class _ListPageState extends State<ListPage> {
                       child: SizedBox(
                           height: MediaQuery.of(context).size.width * 0.82,
                           width: MediaQuery.of(context).size.width,
-                          child: ImageList(imageUrls: widget.cats_list)),
-                    ),
+                          child: Consumer<likes_and_dislikes>(builder: (context, value, child) {
+                            return ImageList(imageUrls: widget.likesPage ? value.likedCats : value.dislikedCats);
+                          },))),
                   ],
                 ),
               ),
@@ -106,8 +105,6 @@ class _ListPageState extends State<ListPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ListPage(
-                              cats_list: widget.other_list,
-                              other_list: widget.cats_list,
                               likesPage: true,
                             ),
                           ),
@@ -135,8 +132,6 @@ class _ListPageState extends State<ListPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ListPage(
-                              cats_list: widget.other_list,
-                              other_list: widget.cats_list,
                               likesPage: false,
                             ),
                           ),
@@ -166,7 +161,7 @@ class ImageList extends StatefulWidget {
 class _ImageListState extends State<ImageList> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: ListView.builder(
         itemCount: widget.imageUrls.length,
         itemBuilder: (context, index) {

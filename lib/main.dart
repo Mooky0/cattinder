@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:cattinder/home.dart';
+import 'package:cattinder/LikesAndDislikes.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => likes_and_dislikes(),
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

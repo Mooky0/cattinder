@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:provider/provider.dart';
 
 import 'package:cattinder/likes.dart';
+import 'package:cattinder/LikesAndDislikes.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,15 +14,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<_CatImageWidgetState> _catImageWidgetKey =
   GlobalKey<_CatImageWidgetState>();
-  List<String?> likedCats = [];
-  List<String?> dislikedCats = [];
   var dio = Dio();
-
-  void _incrementCounter() {
-    setState(() {
-      //_imageId = getRandomCat();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,9 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 IconButton(
-                                    onPressed: () {
-                                      likeButton();
-                                    },
+                                    onPressed: likeButton,
                                     icon: const CircleAvatar(
                                         backgroundColor:
                                         Color.fromARGB(255, 255, 129, 166),
@@ -115,9 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ))),
                                 IconButton(
-                                  onPressed: () {
-                                    dislikeButton();
-                                  },
+                                  onPressed: dislikeButton,
                                   icon: const CircleAvatar(
                                       backgroundColor: Colors.grey,
                                       radius: 35,
@@ -177,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ListPage(cats_list: likedCats, other_list: dislikedCats, likesPage: true))
+                        MaterialPageRoute(builder: (context) => ListPage(likesPage: true))
                     );
                   },
                   icon: const Icon(Icons.favorite, color: Colors.white, size: 45,),
@@ -196,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ListPage(cats_list: likedCats, other_list: dislikedCats, likesPage: true))
+                        MaterialPageRoute(builder: (context) => ListPage(likesPage: true))
                     );
                   },
                   icon: const Icon(Icons.close, color: Colors.white, size: 45,),
@@ -210,23 +200,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void likeButton() {
-    print("Clicked like button");
     if (_catImageWidgetKey.currentState?.imageUrl != null) {
       final imageUrl = _catImageWidgetKey.currentState!.imageUrl;
-      if (!likedCats.contains(imageUrl)) {
-        likedCats.add(imageUrl);
-      }
+      context.read<likes_and_dislikes>().add_like(imageUrl);
     }
     _catImageWidgetKey.currentState?.fetchAndSetCatImage();
   }
 
   void dislikeButton() {
-    print("Clicked dislike button");
     if (_catImageWidgetKey.currentState?.imageUrl != null) {
       final imageUrl = _catImageWidgetKey.currentState!.imageUrl;
-      if (!dislikedCats.contains(imageUrl)) {
-        dislikedCats.add(imageUrl);
-      }
+      context.read<likes_and_dislikes>().add_dislike(imageUrl);
     }
     _catImageWidgetKey.currentState?.fetchAndSetCatImage();
   }
