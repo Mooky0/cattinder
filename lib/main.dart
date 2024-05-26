@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:cattinder/home.dart';
-import 'package:cattinder/LikesAndDislikes.dart';
+import 'package:cattinder/likes_and_dislikes.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
-    create: (context) => likes_and_dislikes(),
+    create: (context) => LikesAndDislikes(),
       child: const MyApp()));
 }
 

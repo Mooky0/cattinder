@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 
 import 'package:cattinder/likes.dart';
-import 'package:cattinder/LikesAndDislikes.dart';
+import 'package:cattinder/likes_and_dislikes.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -41,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Expanded(
-                flex: 8,
+                flex: 12,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -56,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.82,
+                      width: MediaQuery.of(context).size.width * 1,
                       height: MediaQuery.of(context).size.height * 0.7,
                       // padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
@@ -65,11 +68,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         BorderRadius.circular(35), // Rounded edges
                         boxShadow: [
                           BoxShadow(
-                            color: Color(0xFF000000)
+                            color: const Color(0xFF000000)
                                 .withOpacity(0.2), // Shadow color
                             spreadRadius: 2, // Spread of the shadow
                             blurRadius: 10, // Blur radius
-                            offset: Offset(0, 4), // Shadow offset (x, y)
+                            offset: const Offset(0, 4), // Shadow offset (x, y)
                           ),
                         ],
                       ),
@@ -79,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(35),
                             child: SizedBox(
                               height: MediaQuery.of(context).size.height * 0.5,
-                              width: MediaQuery.of(context).size.width * 0.82,
+                              width: MediaQuery.of(context).size.width * 0.99,
 
                               child: CatImageWidget(key: _catImageWidgetKey),
                               //fit: BoxFit.cover,
@@ -167,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ListPage(likesPage: true))
+                        MaterialPageRoute(builder: (context) => const ListPage(likesPage: true))
                     );
                   },
                   icon: const Icon(Icons.favorite, color: Colors.white, size: 45,),
@@ -186,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ListPage(likesPage: true))
+                        MaterialPageRoute(builder: (context) => const ListPage(likesPage: true))
                     );
                   },
                   icon: const Icon(Icons.close, color: Colors.white, size: 45,),
@@ -202,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void likeButton() {
     if (_catImageWidgetKey.currentState?.imageUrl != null) {
       final imageUrl = _catImageWidgetKey.currentState!.imageUrl;
-      context.read<likes_and_dislikes>().add_like(imageUrl);
+      context.read<LikesAndDislikes>().addLike(imageUrl);
     }
     _catImageWidgetKey.currentState?.fetchAndSetCatImage();
   }
@@ -210,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void dislikeButton() {
     if (_catImageWidgetKey.currentState?.imageUrl != null) {
       final imageUrl = _catImageWidgetKey.currentState!.imageUrl;
-      context.read<likes_and_dislikes>().add_dislike(imageUrl);
+      context.read<LikesAndDislikes>().addDislike(imageUrl);
     }
     _catImageWidgetKey.currentState?.fetchAndSetCatImage();
   }
@@ -224,17 +227,17 @@ Future<String?> fetchCatDetails() async {
       final String? id = jsonResponse['_id'];
       return id;
     } else {
-      print('Failed to load data');
+      log('Failed to load data');
       return null;
     }
   } catch (e) {
-    print('Error: $e');
+    log('Error: $e');
     return null;
   }
 }
 
 class CatImageWidget extends StatefulWidget {
-  const CatImageWidget({Key? key}) : super(key: key);
+  const CatImageWidget({super.key});
 
   @override
   _CatImageWidgetState createState() => _CatImageWidgetState();
@@ -292,7 +295,7 @@ class _CatImageWidgetState extends State<CatImageWidget> {
               width: double.infinity,
               height: double.infinity,
             )
-          : Text('No image available'),
+          : const Text('No image available'),
     );
   }
 }

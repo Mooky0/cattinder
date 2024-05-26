@@ -1,13 +1,13 @@
-import 'package:cattinder/LikesAndDislikes.dart';
+import 'package:cattinder/likes_and_dislikes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ListPage extends StatefulWidget {
   final bool likesPage;
 
-  ListPage({Key? key,
+  const ListPage({super.key,
     required this.likesPage}
-      ) : super(key: key);
+      );
 
   @override
   _ListPageState createState() => _ListPageState();
@@ -71,7 +71,7 @@ class _ListPageState extends State<ListPage> {
                       child: SizedBox(
                           height: MediaQuery.of(context).size.width * 0.82,
                           width: MediaQuery.of(context).size.width,
-                          child: Consumer<likes_and_dislikes>(builder: (context, value, child) {
+                          child: Consumer<LikesAndDislikes>(builder: (context, value, child) {
                             return ImageList(imageUrls: widget.likesPage ? value.likedCats : value.dislikedCats);
                           },))),
                   ],
@@ -104,7 +104,7 @@ class _ListPageState extends State<ListPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ListPage(
+                            builder: (context) => const ListPage(
                               likesPage: true,
                             ),
                           ),
@@ -131,7 +131,7 @@ class _ListPageState extends State<ListPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ListPage(
+                            builder: (context) => const ListPage(
                               likesPage: false,
                             ),
                           ),
@@ -152,7 +152,7 @@ class _ListPageState extends State<ListPage> {
 class ImageList extends StatefulWidget {
   final List<String?> imageUrls;
 
-  const ImageList({Key? key, required this.imageUrls}) : super(key: key);
+  const ImageList({super.key, required this.imageUrls});
 
   @override
   _ImageListState createState() => _ImageListState();
@@ -161,32 +161,30 @@ class ImageList extends StatefulWidget {
 class _ImageListState extends State<ImageList> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView.builder(
-        itemCount: widget.imageUrls.length,
-        itemBuilder: (context, index) {
-          final imageUrl = widget.imageUrls[index];
-          if (imageUrl == null) {
-            return const Text('No image');
-          } else {
-            return Padding(
-              padding: const EdgeInsets.only(top: 15, bottom: 15), // Adjust the space between images
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(35),
-                child: Image.network(
-                  imageUrl,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  width: MediaQuery.of(context).size.width,
-                  fit: BoxFit.cover, // Ensure the image fills the container
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Text('Failed to load image');
-                  },
-                ),
+    return ListView.builder(
+      itemCount: widget.imageUrls.length,
+      itemBuilder: (context, index) {
+        final imageUrl = widget.imageUrls[index];
+        if (imageUrl == null) {
+          return const Text('No image');
+        } else {
+          return Padding(
+            padding: const EdgeInsets.only(top: 15, bottom: 15), // Adjust the space between images
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(35),
+              child: Image.network(
+                imageUrl,
+                height: MediaQuery.of(context).size.height * 0.3,
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.cover, // Ensure the image fills the container
+                errorBuilder: (context, error, stackTrace) {
+                  return const Text('Failed to load image');
+                },
               ),
-            );
-          }
-        },
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 
